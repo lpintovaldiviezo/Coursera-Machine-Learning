@@ -80,10 +80,11 @@ testData <- trainCleaned[-inTrain, ]
 
 ## Data Modeling
 
-We fit a predictive model for activity recognition using Random Forest algorithm because it automatically selects important variables and is robust to correlated covariates & outliers in general. It is also important to mention that random forest doesnt need to do cross validation because it automatically do resampling of the data.
+We fit a predictive model for activity recognition using Random Forest algorithm because it automatically selects important variables and is robust to correlated covariates & outliers in general.  We will use 5-fold cross validation
 
 ```{r}
-modelRf <- train(classe ~ ., data=trainData, method="rf", ntree=250)
+controlRf <- trainControl(method="cv", 5)
+modelRf <- train(classe ~ ., data=trainData, method="rf",trControl=controlRf, ntree=250)
 
 ```
 
@@ -94,7 +95,7 @@ predictRf <- predict(modelRf, testData)
 confusionMatrix(testData$classe, predictRf)
 ```
 
-So, the estimated accuracy of the model is 99.95%.
+So, the estimated accuracy of the model is 99.95%.and the estimated out-of-sample error is 0.05%
 
 ## Predicting for Test Data Set
 

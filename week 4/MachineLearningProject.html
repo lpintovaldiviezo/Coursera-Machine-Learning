@@ -176,8 +176,9 @@ testData &lt;- trainCleaned[-inTrain, ]</code></pre>
 </div>
 <div id="data-modeling" class="section level2">
 <h2>Data Modeling</h2>
-<p>We fit a predictive model for activity recognition using Random Forest algorithm because it automatically selects important variables and is robust to correlated covariates &amp; outliers in general. It is also important to mention that random forest doesnt need to do cross validation because it automatically do resampling of the data.</p>
-<pre class="r"><code>modelRf &lt;- train(classe ~ ., data=trainData, method=&quot;rf&quot;, ntree=250)</code></pre>
+<p>We fit a predictive model for activity recognition using Random Forest algorithm because it automatically selects important variables and is robust to correlated covariates &amp; outliers in general. We will use 5-fold cross validation</p>
+<pre class="r"><code>controlRf &lt;- trainControl(method=&quot;cv&quot;, 5)
+modelRf &lt;- train(classe ~ ., data=trainData, method=&quot;rf&quot;,trControl=controlRf, ntree=250)</code></pre>
 <pre><code>## Loading required namespace: e1071</code></pre>
 <p>Then, we estimate the performance of the model on the validation data set.</p>
 <pre class="r"><code>predictRf &lt;- predict(modelRf, testData)
@@ -187,33 +188,33 @@ confusionMatrix(testData$classe, predictRf)</code></pre>
 ##           Reference
 ## Prediction    A    B    C    D    E
 ##          A 1674    0    0    0    0
-##          B    1 1136    2    0    0
+##          B    1 1137    1    0    0
 ##          C    0    0 1025    1    0
 ##          D    0    0    0  964    0
 ##          E    0    0    0    0 1082
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9993          
-##                  95% CI : (0.9983, 0.9998)
+##                Accuracy : 0.9995          
+##                  95% CI : (0.9985, 0.9999)
 ##     No Information Rate : 0.2846          
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.9991          
+##                   Kappa : 0.9994          
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9994   1.0000   0.9981   0.9990   1.0000
-## Specificity            1.0000   0.9994   0.9998   1.0000   1.0000
-## Pos Pred Value         1.0000   0.9974   0.9990   1.0000   1.0000
-## Neg Pred Value         0.9998   1.0000   0.9996   0.9998   1.0000
-## Prevalence             0.2846   0.1930   0.1745   0.1640   0.1839
-## Detection Rate         0.2845   0.1930   0.1742   0.1638   0.1839
+## Sensitivity            0.9994   1.0000   0.9990   0.9990   1.0000
+## Specificity            1.0000   0.9996   0.9998   1.0000   1.0000
+## Pos Pred Value         1.0000   0.9982   0.9990   1.0000   1.0000
+## Neg Pred Value         0.9998   1.0000   0.9998   0.9998   1.0000
+## Prevalence             0.2846   0.1932   0.1743   0.1640   0.1839
+## Detection Rate         0.2845   0.1932   0.1742   0.1638   0.1839
 ## Detection Prevalence   0.2845   0.1935   0.1743   0.1638   0.1839
-## Balanced Accuracy      0.9997   0.9997   0.9989   0.9995   1.0000</code></pre>
-<p>So, the estimated accuracy of the model is 99.95%.</p>
+## Balanced Accuracy      0.9997   0.9998   0.9994   0.9995   1.0000</code></pre>
+<p>So, the estimated accuracy of the model is 99.95%.and the estimated out-of-sample error is 0.05%</p>
 </div>
 <div id="predicting-for-test-data-set" class="section level2">
 <h2>Predicting for Test Data Set</h2>
